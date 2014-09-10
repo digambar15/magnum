@@ -3,4 +3,4 @@ from api.controllers import v2
 
 
 class RootController(object):
-    v2 = v2.VersionController()
+    v2 = v2.ContainerController()
