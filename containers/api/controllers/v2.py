@@ -20,10 +20,10 @@ from pecan import rest, response
 import six
 
 
-state_kind = ["ok", "alarm", "insufficient data"]
 state_kind_enum = wtypes.Enum(str, *state_kind)
 operation_kind = ('lt', 'le', 'eq', 'ne', 'ge', 'gt')
 operation_kind_enum = wtypes.Enum(str, *operation_kind)
+
 
 class _Base(wtypes.Base):
 
@@ -47,7 +47,9 @@ class _Base(wtypes.Base):
                     if hasattr(self, k) and
                     getattr(self, k) != wsme.Unset)
 
+
 class Query(_Base):
+
     """Query filter."""
 
     # The data types supported by the query.
@@ -103,19 +105,6 @@ class Query(_Base):
 
     def _get_value_as_type(self, forced_type=None):
         """Convert metadata value to the specified data type.
-
-        This method is called during metadata query to help convert the
-        querying metadata to the data type specified by user. If there is no
-        data type given, the metadata will be parsed by ast.literal_eval to
-        try to do a smart converting.
-
-        NOTE (flwang) Using "_" as prefix to avoid an InvocationError raised
-        from wsmeext/sphinxext.py. It's OK to call it outside the Query class.
-        Because the "public" side of that class is actually the outside of the
-        API, and the "private" side is the API implementation. The method is
-        only used in the API implementation, so it's OK.
-
-        :returns: metadata value converted with the specified data type.
         """
         type = forced_type or self.type
         try:
@@ -153,7 +142,6 @@ class Query(_Base):
         return converted_value
 
 
-
 class Container(_Base):
     container_id = wtypes.text
     """ The ID of the containers."""
@@ -168,35 +156,33 @@ class Container(_Base):
 
     @classmethod
     def sample(cls):
-	return cls(id=str(uuid.uuid1(),
-                   name="Docker",
-                   desc='Docker Containers'))
+        return cls(id=str(uuid.uuid1(),
+                          name="Docker",
+                          desc='Docker Containers'))
 
 
 class ContainerController(rest.RestController):
 
     @wsme_pecan.wsexpose([Container], [Query], int)
     def get_all(self, q=None, limit=None):
-         # TODO: Returns all the containers
-         return {
-             "200": "It returns all the containers."
-             }
+        # TODO: Returns all the containers
+        response.status = 200
+        return
 
     @wsme_pecan.wsexpose(Container, wtypes.text)
     def get_one(self, container_id):
         # TODO: Returns all the containers
-        return {
-            "200": "It returns all the containers."
-            }
+        response.status = 200
+        return
 
     @wsme_pecan.wsexpose([Container], body=[Container])
     def post(self, data):
         # TODO: Create a new container
-        response.status=201
+        response.status = 201
         return
 
     @wsme_pecan.wsexpose(None, status_code=204)
     def delete(self):
         # TODO: DELETE the containers
-        response.status=200
+        response.status = 204
         return
