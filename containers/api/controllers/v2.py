@@ -20,6 +20,7 @@ from pecan import rest, response
 import six
 
 
+state_kind = ["ok", "containers", "insufficient data"]
 state_kind_enum = wtypes.Enum(str, *state_kind)
 operation_kind = ('lt', 'le', 'eq', 'ne', 'ge', 'gt')
 operation_kind_enum = wtypes.Enum(str, *operation_kind)
